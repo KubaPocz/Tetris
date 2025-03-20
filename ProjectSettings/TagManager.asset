@@ -2,8 +2,12 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Ground
+  - Block
+  - Grid1
+  - Grid2
   layers:
   - Default
   - TransparentFX
@@ -11,8 +15,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Wall
+  - Background
   - 
   - 
   - 
@@ -38,6 +42,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3071293579
+    locked: 0
+  - name: Map
+    uniqueID: 2901944585
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Top
+    uniqueID: 655147375
+    locked: 0
+  m_RenderingLayers:
+  - Default
