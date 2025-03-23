@@ -7,21 +7,21 @@
             "actions": [
                 {
                     "name": "Player1",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "67234411-cc4e-4e9c-85f9-9204b2c6e60e",
-                    "expectedControlType": "",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Player2",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "973f057b-b8d2-4930-a64e-06c28a45a306",
-                    "expectedControlType": "",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

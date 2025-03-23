@@ -8,6 +8,8 @@ TagManager:
   - Block
   - Grid1
   - Grid2
+  - Wall
+  - Spawner
   layers:
   - Default
   - TransparentFX
@@ -53,6 +55,9 @@ TagManager:
     locked: 0
   - name: Top
     uniqueID: 655147375
+    locked: 0
+  - name: UI
+    uniqueID: 3360112969
     locked: 0
   m_RenderingLayers:
   - Default
