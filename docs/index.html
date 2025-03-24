@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tetris</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 3.5em;
+      margin-bottom: 10px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    img {
+      max-width: 90%;
+      height: auto;
+      border: 4px solid #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      margin-top: 20px;
+      animation: zoomIn 1.5s ease;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 600px;
+      margin-top: 30px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: #6c63ff;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #574fcf;
+    }
+
+    p {
+      font-size: 1.2em;
+      opacity: 0.85;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Tetris</h1>
+  <img src="tetrisShowcase.gif" alt="Tetris gif" />
+  <div class="card">
+    <p><strong>Autor:</strong> Kuba Pocztowski</p>
+    <p>Gra została napisana od podstaw i działa świetnie — idealna na chwilę relaksu.</p>
+    <a href="TUTAJ_WSTAW_LINK_DO_GRY" class="button">Zagraj teraz</a>
+  </div>
+</body>
+</html>
