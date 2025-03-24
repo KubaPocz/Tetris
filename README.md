@@ -3,7 +3,7 @@
 Moja własna wersja klasycznej gry Tetris, stworzona jako zadanie testowe.
 
 ## 🔗 Zagraj tutaj:
-👉 [Kliknij, aby przejść na stronę](https://twoja-strona.github.io/tetris)  
+👉 [Kliknij, aby przejść na stronę](https://kubapocz.github.io/Tetris/)  
 
 ## 🛠️ Technologie
 - Unity / C# 
