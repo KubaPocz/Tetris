@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using Codice.CM.Client.Differences;
-using System;
 
 public class UIController : MonoBehaviour
 {

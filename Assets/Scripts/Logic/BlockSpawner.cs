@@ -8,6 +8,10 @@ public class BlockSpawner : MonoBehaviour
     private GameObject spawnedBlock;
     private TetrisController spawnedBlockTetrisController;
     public GridManager[] gridManager;
+    private void Awake()
+    {
+        
+    }
     void Start()
     {
         gridManager[0].nextBlock = blocks[Random.Range(0, blocks.Length)];
@@ -15,7 +19,7 @@ public class BlockSpawner : MonoBehaviour
 
         SpawnBlock(1);
         SpawnBlock(2);
-        Invoke(nameof(SendNextBlockUpdate), 0.1f);
+        Invoke(nameof(SendNextBlockUpdate), 0.5f);
     }
 
     private void SendNextBlockUpdate()
