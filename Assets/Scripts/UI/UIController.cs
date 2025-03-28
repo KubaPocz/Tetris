@@ -4,78 +4,92 @@ using TMPro;
 
 public class UIController : MonoBehaviour
 {
-    [Header("Player1")]
-    private string player1Nickname = "Player1";
+    [Header("Player 1 UI")]
+    private string _player1Nickname = "Player1";
     public TextMeshProUGUI player1ScoreText;
     public GameObject player1BlockPreview;
     public TextMeshProUGUI player1NicknameText;
 
-
-    [Header("Player2")]
-    private string player2Nickname = "Player2";
+    [Header("Player 2 UI")]
+    private string _player2Nickname = "Player2";
     public TextMeshProUGUI player2ScoreText;
     public GameObject player2BlockPreview;
     public TextMeshProUGUI player2NicknameText;
 
-    [Header("Result")]
-    public GameObject result_panel;
-    public TextMeshProUGUI result_text;
-
+    [Header("Result Panel")]
+    public GameObject resultPanel;
+    public TextMeshProUGUI resultText;
 
     private void Start()
     {
-        result_panel.SetActive(false);
+        // Hide result panel
+        resultPanel.SetActive(false);
+
+        // Set starting scores
         player1ScoreText.text = "0";
         player2ScoreText.text = "0";
 
-        player1NicknameText.text = player1Nickname;
-        player2NicknameText.text = player2Nickname;
+        // Set nicknames
+        player1NicknameText.text = _player1Nickname;
+        player2NicknameText.text = _player2Nickname;
 
-
+        // Connect to game events
         Events.OnUpdateScore += UpdateScore;
         Events.OnUpdateNextBlock += UpdateNextBlock;
         Events.OnEndGame += EndGame;
     }
-    public void EndGame(int looserPlayerID)
+
+    public void EndGame(int losingPlayerId)
     {
+        // Pause game and show winner info
         Time.timeScale = 0;
-        result_panel.SetActive(true);
-        if (looserPlayerID == 1)
+        resultPanel.SetActive(true);
+
+        if (losingPlayerId == 1)
         {
-            result_text.text = $"{player2Nickname} won!\nScore:{player2ScoreText.text}";
+            resultText.text = $"{_player2Nickname} won!\nScore: {player2ScoreText.text}";
         }
-        else if (looserPlayerID == 2)
+        else if (losingPlayerId == 2)
         {
-            result_text.text = $"{player1Nickname} won!\nScore:{player1ScoreText.text}";
+            resultText.text = $"{_player1Nickname} won!\nScore: {player1ScoreText.text}";
         }
         else
         {
-            result_text.text = "Error";
+            resultText.text = "Error";
         }
     }
+
     public void RestartGame()
     {
+        // Reload the scene
         SceneManager.LoadSceneAsync("1");
     }
-    public void UpdateScore(int playerID, int playerScore)
+
+    public void UpdateScore(int playerId, int playerScore)
     {
-        if(playerID == 1)
+        // Update player's score text
+        if (playerId == 1)
         {
             player1ScoreText.text = playerScore.ToString();
         }
-        else if(playerID == 2)
+        else if (playerId == 2)
         {
             player2ScoreText.text = playerScore.ToString();
         }
     }
+
     public void UpdateNextBlock(int playerId, GameObject nextBlock)
     {
-        var blockPreview = playerId==1?player1BlockPreview : player2BlockPreview;
+        // Get correct preview container
+        GameObject blockPreview = playerId == 1 ? player1BlockPreview : player2BlockPreview;
 
+        // Remove previous block preview
         foreach (Transform child in blockPreview.transform)
         {
             Destroy(child.gameObject);
         }
+
+        // Add new block preview
         Instantiate(nextBlock.GetComponent<BlockPreview>().blockImage.transform, blockPreview.transform);
     }
 }

@@ -5,43 +5,51 @@ using UnityEngine.InputSystem;
 
 public class TetrisController : MonoBehaviour
 {
-    private GameObject grid;
-    private GridManager gridManager;
-    public string gridTag;
-    private float targetPositionX;
-    public float gravity;
+    private GameObject _grid;
+    private GridManager _gridManager;
+    private Rigidbody2D _rb;
+    private BlockSpawner _blockSpawner;
 
+    private float _targetPositionX;
+    private bool _isActive = true;
+
+    public string gridTag;
+    public float gravity;
     public int playerId;
     public float gridSize = 1f;
 
-    private Rigidbody2D rb;
-    private bool isActive = true;
-    private BlockSpawner blockSpawner;
-
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        targetPositionX = rb.position.x;
+        _rb = GetComponent<Rigidbody2D>();
+        _targetPositionX = _rb.position.x;
     }
+
     private void Start()
     {
-        grid = GameObject.FindGameObjectWithTag(gridTag);
-        gridManager = grid.GetComponent<GridManager>();
-        blockSpawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<BlockSpawner>();
+        // Assign references
+        _grid = GameObject.FindGameObjectWithTag(gridTag);
+        _gridManager = _grid.GetComponent<GridManager>();
+        _blockSpawner = GameObject.FindGameObjectWithTag("Spawner").GetComponent<BlockSpawner>();
 
+        // Subscribe to movement input
         if (playerId == 1)
             Events.OnPlayer1MoveInput += Move;
         else if (playerId == 2)
             Events.OnPlayer2MoveInput += Move;
     }
+
     private void FixedUpdate()
     {
-        rb.position = new Vector2(Mathf.Lerp(rb.position.x, targetPositionX, 40f*Time.deltaTime), rb.position.y-(gravity * Time.deltaTime));
+        // Move block towards target position and apply gravity
+        _rb.position = new Vector2(
+            Mathf.Lerp(_rb.position.x, _targetPositionX, 40f * Time.deltaTime),
+            _rb.position.y - (gravity * Time.deltaTime)
+        );
     }
-
 
     private void OnDisable()
     {
+        // Unsubscribe from input events
         if (playerId == 1)
             Events.OnPlayer1MoveInput -= Move;
         else if (playerId == 2)
@@ -50,71 +58,98 @@ public class TetrisController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // If the block hits ground or another block
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Block"))
         {
-            List<Transform> quadsToDetach = new List<Transform>(); // Tymczasowa lista Quads
+            List<Transform> quadsToDetach = new List<Transform>();
 
+            // Store child blocks to detach
             foreach (Transform child in transform)
             {
                 quadsToDetach.Add(child);
             }
 
+            // Detach and add each block to the grid
             foreach (Transform quad in quadsToDetach)
             {
-                quad.SetParent(gridManager.transform);
+                quad.SetParent(_gridManager.transform);
                 quad.GetComponent<BoxCollider2D>().enabled = true;
-                gridManager.AddToGrid(quad.gameObject, Mathf.RoundToInt(quad.transform.localPosition.x), Mathf.RoundToInt(quad.transform.localPosition.y));
+                _gridManager.AddToGrid(
+                    quad.gameObject,
+                    Mathf.RoundToInt(quad.transform.localPosition.x),
+                    Mathf.RoundToInt(quad.transform.localPosition.y)
+                );
             }
-            if (isActive)
+
+            if (_isActive)
             {
-                blockSpawner.SpawnBlock(playerId);
-                isActive = false;
+                _blockSpawner.SpawnBlock(playerId);
+                _isActive = false;
             }
-            gridManager.ClearFullRows();
+
+            _gridManager.ClearFullRows();
             Destroy(gameObject);
         }
     }
+
     private void Move(float direction)
     {
+        // Check for wall collision
         if (IsBlockedByWall(direction))
         {
-            Debug.Log("Ruch zablokowany przez ścianę!");
+            Debug.Log("Blocked by wall");
             return;
         }
-        targetPositionX = rb.position.x + direction;
+
+        // Set target position for smooth movement
+        _targetPositionX = _rb.position.x + direction;
     }
 
-
-    
     private bool IsBlockedByWall(float direction)
     {
-        float checkDistance = gridSize*0.99f ;
-        Vector2 checkDirection = new Vector2(direction, 0);
-        Vector2 rayOrigin = (Vector2)rb.position + new Vector2(direction * (gridSize / 2f), 0);
+        float checkDistance = gridSize * 0.99f;
 
-        Debug.DrawRay(rayOrigin, checkDirection * checkDistance, Color.red, 0.2f);
+        // 1. Find the furthest block (child) in movement direction
+        Transform furthestChild = null;
+        float extremeX = direction > 0 ? float.NegativeInfinity : float.PositiveInfinity;
 
-        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, checkDirection, checkDistance, 1 << 6);
-
-        if (hit.collider != null)
+        foreach (Transform child in transform)
         {
-            Debug.Log("Raycast trafił w: " + hit.collider.name);
-            return true; // Trafił w ścianę (bo patrzymy tylko na warstwę Wall)
+            float childX = child.position.x;
+            if ((direction > 0 && childX > extremeX) || (direction < 0 && childX < extremeX))
+            {
+                extremeX = childX;
+                furthestChild = child;
+            }
         }
+
+        if (furthestChild == null)
+            return false; // safety check
+
+        // 2. Setup raycast direction and origin
+        Vector2 rayOrigin = furthestChild.position;
+        Vector2 rayDirection = new Vector2(direction, 0);
+
+        Debug.DrawRay(rayOrigin, rayDirection * checkDistance, Color.red, 0.2f);
+
+        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, rayDirection, checkDistance, 1 << 6);
+
         if (hit.collider != null)
         {
-            Debug.Log("Raycast trafił w: " + hit.collider.name);
-            return true; // Trafił w ścianę (bo patrzymy tylko na warstwę Wall)
+            Debug.Log("Raycast hit: " + hit.collider.name);
+            return true;
         }
 
         return false;
     }
+
 
     public void Initialize(int playerId)
     {
         this.playerId = playerId;
         gravity = 3f;
 
+        // Assign grid tag based on player
         switch (playerId)
         {
             case 1:

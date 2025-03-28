@@ -290,8 +290,8 @@ MonoBehaviour:
   player2ScoreText: {fileID: 492030338}
   player2BlockPreview: {fileID: 1986594112}
   player2NicknameText: {fileID: 1613511888}
-  result_panel: {fileID: 460173172}
-  result_text: {fileID: 559880428}
+  resultPanel: {fileID: 460173172}
+  resultText: {fileID: 559880428}
 --- !u!4 &444913553
 Transform:
   m_ObjectHideFlags: 0
